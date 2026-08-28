@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import ExpenseChart from "../components/ExpenseChart";
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || "/api";
+
 function Dashboard({ user, reload }) {
   const [expenses, setExpenses] = useState([]);
 
@@ -11,9 +13,7 @@ function Dashboard({ user, reload }) {
   // 🔥 LOAD FROM BACKEND
   const loadExpenses = async () => {
     try {
-      const res = await fetch(
-        `http://localhost:8080/expenses/${user.email}`
-      );
+      const res = await fetch(`${API_BASE_URL}/expenses/${user.email}`);
       const data = await res.json();
       setExpenses(data);
     } catch (err) {
@@ -29,7 +29,7 @@ function Dashboard({ user, reload }) {
   const addExpense = async () => {
     if (!title || !amount || !category) return;
 
-    await fetch("http://localhost:8080/expenses", {
+    await fetch(`${API_BASE_URL}/expenses`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -50,7 +50,7 @@ function Dashboard({ user, reload }) {
 
   // ❌ DELETE EXPENSE
   const deleteExpense = async (id) => {
-    await fetch(`http://localhost:8080/expenses/${id}`, {
+    await fetch(`${API_BASE_URL}/expenses/${id}`, {
       method: "DELETE",
     });
 

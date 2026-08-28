@@ -6,6 +6,8 @@ import Sidebar from "./components/Sidebar";
 import Analytics from "./pages/Analytics";
 import Reports from "./pages/Reports";
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || "/api";
+
 export default function App() {
   const [user, setUser] = useState(null);
   const [authPage, setAuthPage] = useState("login");
@@ -20,7 +22,7 @@ export default function App() {
   const loadExpenses = async (email) => {
     if (!email) return;
 
-    const res = await fetch(`http://localhost:8080/expenses/${email}`);
+    const res = await fetch(`${API_BASE_URL}/expenses/${email}`);
     const data = await res.json();
     setExpenses(data);
   };
