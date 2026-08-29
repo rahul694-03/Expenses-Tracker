@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -6,75 +7,130 @@ import Sidebar from "./components/Sidebar";
 import Analytics from "./pages/Analytics";
 import Reports from "./pages/Reports";
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || "/api";
+const API_BASE_URL = "https://expenses-tracker-7-0xw4.onrender.com";
 
 export default function App() {
+
   const [user, setUser] = useState(null);
   const [authPage, setAuthPage] = useState("login");
   const [page, setPage] = useState("dashboard");
   const [expenses, setExpenses] = useState([]);
 
+  // Load logged-in user
   useEffect(() => {
+
     const session = localStorage.getItem("currentUser");
-    if (session) setUser(JSON.parse(session));
+
+    if (session) {
+      setUser(JSON.parse(session));
+    }
+
   }, []);
 
+  // Load expenses
   const loadExpenses = async (email) => {
+
     if (!email) return;
 
-    const res = await fetch(`${API_BASE_URL}/expenses/${email}`);
-    const data = await res.json();
-    setExpenses(data);
+    try {
+
+      const res = await fetch(
+        `${API_BASE_URL}/expenses/${encodeURIComponent(email)}`
+      );
+
+      if (!res.ok) {
+        throw new Error(`HTTP error ${res.status}`);
+      }
+
+      const data = await res.json();
+
+      setExpenses(data);
+
+    } catch (error) {
+
+      console.error("Error loading expenses:", error);
+
+    }
   };
 
+  // Reload when user changes
   useEffect(() => {
-    if (user) loadExpenses(user.email);
+
+    if (user) {
+      loadExpenses(user.email);
+    }
+
   }, [user]);
 
+  // Logout
   const logout = () => {
+
     localStorage.removeItem("currentUser");
+
     setUser(null);
     setAuthPage("login");
     setExpenses([]);
+
   };
 
-  // 🔐 AUTH SCREEN (FIXED SIGNUP VISIBILITY)
+  // Login / Signup
   if (!user) {
+
     return (
       <div className="auth-wrapper">
-        
+
         <div className="auth-box">
-          
+
           {authPage === "login" && (
-            <Login setUser={setUser} setAuthPage={setAuthPage} />
+            <Login
+              setUser={setUser}
+              setAuthPage={setAuthPage}
+            />
           )}
 
           {authPage === "signup" && (
-            <Signup setAuthPage={setAuthPage} />
+            <Signup
+              setAuthPage={setAuthPage}
+            />
           )}
 
           <div style={{ marginTop: "15px" }}>
-            <button onClick={() => setAuthPage("login")}>
+
+            <button
+              onClick={() => setAuthPage("login")}
+            >
               Login
             </button>
 
-            <button onClick={() => setAuthPage("signup")}>
+            <button
+              onClick={() => setAuthPage("signup")}
+            >
               Signup
             </button>
+
           </div>
 
         </div>
+
       </div>
     );
   }
 
-  // 📊 MAIN APP
+  // Main application
   return (
+
     <div style={{ display: "flex" }}>
-      <Sidebar page={page} setPage={setPage} />
+
+      <Sidebar
+        page={page}
+        setPage={setPage}
+      />
 
       <div style={{ width: "100%" }}>
-        <button onClick={logout}>Logout</button>
+
+        <button onClick={logout}>
+          Logout
+        </button>
 
         {page === "dashboard" && (
           <Dashboard
@@ -84,13 +140,19 @@ export default function App() {
         )}
 
         {page === "analytics" && (
-          <Analytics expenses={expenses} />
+          <Analytics
+            expenses={expenses}
+          />
         )}
 
         {page === "reports" && (
-          <Reports expenses={expenses} />
+          <Reports
+            expenses={expenses}
+          />
         )}
+
       </div>
+
     </div>
   );
 }

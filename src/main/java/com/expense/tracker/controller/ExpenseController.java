@@ -18,30 +18,43 @@ import com.expense.tracker.service.ExpenseService;
 @RestController
 @RequestMapping("/expenses")
 @CrossOrigin(origins = {
-    "http://localhost:5173",
-    "https://frontend-ly96but3j-pentarahul03-gmailcoms-projects.vercel.app",
-    "https://frontend-nine-omega-21.vercel.app"
+        "http://localhost:5173",
+        "http://localhost:5174",
+        "https://frontend-ly96but3j-pentarahul03-gmailcoms-projects.vercel.app",
+        "https://frontend-nine-omega-21.vercel.app"
 })
 public class ExpenseController {
 
     @Autowired
     private ExpenseService service;
 
-    // 🔥 GET USER EXPENSES
+    // TEST BACKEND
+    @GetMapping
+    public String test() {
+        return "Expense Tracker Backend is running!";
+    }
+
+    // GET USER EXPENSES
     @GetMapping("/{email}")
-    public List<Expense> getExpensesByEmail(@PathVariable String email) {
+    public List<Expense> getExpensesByEmail(
+            @PathVariable String email) {
+
         return service.getExpensesByEmail(email);
     }
 
     // ADD EXPENSE
     @PostMapping
-    public Expense addExpense(@RequestBody Expense expense) {
+    public Expense addExpense(
+            @RequestBody Expense expense) {
+
         return service.addExpense(expense);
     }
 
-    // DELETE
+    // DELETE EXPENSE
     @DeleteMapping("/{id}")
-    public void deleteExpense(@PathVariable Long id) {
+    public void deleteExpense(
+            @PathVariable Long id) {
+
         service.deleteExpense(id);
     }
 }
