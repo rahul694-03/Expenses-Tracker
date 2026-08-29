@@ -18,10 +18,11 @@ import com.expense.tracker.service.ExpenseService;
 @RestController
 @RequestMapping("/expenses")
 @CrossOrigin(origins = {
-        "http://localhost:5173",
-        "http://localhost:5174",
-        "https://frontend-ly96but3j-pentarahul03-gmailcoms-projects.vercel.app",
-        "https://frontend-nine-omega-21.vercel.app"
+    "http://localhost:5173",
+    "http://localhost:5174",
+    "https://expenses-tracker-flax-six.vercel.app",
+    "https://frontend-ly96but3j-pentarahul03-gmailcoms-projects.vercel.app",
+    "https://frontend-nine-omega-21.vercel.app"
 })
 public class ExpenseController {
 
